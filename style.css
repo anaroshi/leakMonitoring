@@ -45,9 +45,6 @@
   /* Size */
   --avatar-szie: 35px;
   --size-border-radius: 4px;
-
-  /* Animation */
-  --animation-duration: 300ms;
 }
 
 /* Body */
@@ -86,6 +83,7 @@ td {
 .tPname:hover,
 .tOnoff:hover,
 .tDetail_off:hover {
+  cursor: pointer;
   border: 1px solid var(--color-white);
   background-color: var(--color-dark-rusty);
   color: var(--color-white);
@@ -94,6 +92,7 @@ td {
 .hPname:hover,
 .hOnoff:hover,
 th.hDetail:hover {
+  cursor: pointer;
   background-color: var(--color-5-grey);
   border: 1px solid var(--color-light-rusty);
   color: var(--color-dark-rusty);
@@ -229,12 +228,3 @@ input {
   width: 700px;
   text-align: center;
 }
-
-.hPname:hover,
-.hOnoff:hover,
-.hDetail:hover,
-.tPname:hover,
-.tOnoff:hover,
-.tDetail_off:hover {
-  cursor: pointer;
-}  
