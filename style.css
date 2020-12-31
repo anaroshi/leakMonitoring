@@ -1,0 +1,240 @@
+/* Global*/
+:root {
+  /* Color */
+  --color-white: #ffffff;
+  --color-light-white: #eeeeee;
+  --color-dark-white: #bdbdbd;
+  --color-pink: #fe918d;
+  --color-dark-pink: #ff6863;
+  --color-rusty: #c75000;
+  --color-light-rusty: #544c3e;
+  --color-dark-rusty: #403828;
+  --color-dark-grey: #4d4d4d;
+  --color-grey: #616161;
+  --color-light-grey: #7c7979;
+  --color-blue: #73aace;
+  --color-yellow: #fff7d1;
+  --color-orange: #feb546;
+  --color-black: #000000;
+  --color-1-grey: #f0f0f1;
+  --color-2-grey: #e1e1e3;
+  --color-3-grey: #d2d2d5;
+  --color-4-grey: #c3c3c7;
+  --color-5-grey: #b5b4b9;
+  --color-6-grey: #a6a4ab;
+  --color-7-grey: #97959d;
+  --color-8-grey: #88868f;
+  --color-9-grey: #797781;
+  --color-10-grey: #6a6873;
+
+  /* Font size */
+  --font-large: 48px;
+  --font-medium: 28px;
+  --font-regular: 18px;
+  --font-small: 16px;
+  --font-micro: 14px;
+  --font-nano: 12px;
+  --font-pico: 10px;
+  --font-femto: 8px;
+
+  /* Font weight */
+  --weight-bold: 700;
+  --weight-semi-bold: 600;
+  --weight-regular: 400;
+
+  /* Size */
+  --avatar-szie: 35px;
+  --size-border-radius: 4px;
+
+  /* Animation */
+  --animation-duration: 300ms;
+}
+
+/* Body */
+body {
+  color: var(--color-dark-grey);
+  font-size: var(--font-nano);
+  font-family: "Open Sans", sans-serif;
+  border: none;
+  background-color: var(--color-light-white);
+  cursor: default;
+}
+
+thead {
+  background-color: var(--color-dark-rusty);
+  color: var(--color-light-white);
+}
+
+.trEach {
+  border: 1px solid var(--color-grey);
+  height: 24px;
+}
+
+.tInicial {
+  height: 24px;
+}
+
+th {
+  text-align: center;
+  font-weight: bold;
+}
+
+td {
+  text-align: center;
+}
+
+.tPname:hover,
+.tOnoff:hover,
+.tDetail_off:hover {
+  border: 1px solid var(--color-white);
+  background-color: var(--color-dark-rusty);
+  color: var(--color-white);
+}
+
+.hPname:hover,
+.hOnoff:hover,
+th.hDetail:hover {
+  background-color: var(--color-5-grey);
+  border: 1px solid var(--color-light-rusty);
+  color: var(--color-dark-rusty);
+}
+
+.sInfo {
+  text-align: left;
+  padding-left: 3px;
+}
+
+.tDetail {
+  text-align: right;
+  visibility: hidden;
+}
+
+.hNO {
+  width: 36px;
+}
+
+.hSid,
+.tSid,
+.sSid {
+  width: 92px;
+}
+
+.hPname {
+  width: 140px;
+}
+
+.hComment,
+.tComment,
+.sComment {
+  margin-left: 3px;
+  width: 100px;
+  height: 21px;
+}
+
+.hTotal,
+.hSum {
+  width: 50px;
+}
+
+.hNow {
+  width: 307px;
+}
+
+.hMinute {
+  width: 100px;
+}
+
+.hOnoff {
+  width: 84px;
+}
+
+input {
+  color: var(--color-dark-grey);
+}
+
+.hDetail {
+  width: 30px;
+}
+
+.hPname,
+.hOnoff,
+.hDetail {
+  background-color: var(--color-orange);
+  border: 1px solid var(--color-dark-rusty);
+  color: var(--color-dark-grey);
+}
+
+.tNo,
+.sNo {
+  width: 36px;
+  text-align: center;
+}
+
+.sSn {
+  width: 232px;
+}
+
+.sInfoDate,
+.sInfo {
+  width: 300px;
+}
+
+.sLcolor,
+.sCcolor {
+  width: 12px;
+}
+
+.hhMinute,
+.tMinute {
+  width: 30px;
+  height: 21px;
+  text-align: right;
+}
+
+.sInicial {
+  vertical-align: top;
+}
+
+.tPname {
+  background-color: var(--color-2-grey);
+  border: 1px solid var(--color-dark-rusty);
+  size: 24px;
+}
+
+.tOnoff,
+.tDetail_off {
+  background-color: var(--color-2-grey);
+  border: 1px solid var(--color-dark-rusty);
+}
+
+/* 내용 */
+.tComment,
+.sComment {
+  /* 한 줄 자르기 */
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  /* 여러 줄 자르기 추가 스타일 */
+  white-space: normal;
+  text-align: left;
+  word-wrap: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.nodata {
+  width: 700px;
+  text-align: center;
+}
+
+.hPname:hover,
+.hOnoff:hover,
+.hDetail:hover,
+.tPname:hover,
+.tOnoff:hover,
+.tDetail_off:hover {
+  cursor: pointer;
+}  
