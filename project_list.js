@@ -3,12 +3,12 @@ $(document).ready(function () {
 
   $('.hPname').on('click', function () {   
       
-    var _td = $(this).closest('tr').children();
-    var tNo = _td.eq(0).text();
-  //  var sid = _td.eq(1).text();
-    var intervalMinute =  _td.find('input').val();
+    let _td = $(this).closest('tr').children();
+    let tNo = _td.eq(0).text();
+  //  let sid = _td.eq(1).text();
+    let intervalMinute =  _td.find('input').val();
         
-    var sid = 'mdaejeon';
+    let sid = 'mdaejeon';
 
     //alert(`tNo : ${tNo}, intervalMinute : ${intervalMinute}`);
 
@@ -58,11 +58,11 @@ $(document).ready(function () {
 
   $('.tComment').on('focusout', function(event) {
 
-    var _td = $(this).closest('tr').children();
-    var tNo = _td.eq(0).text();
-    var sid = _td.eq(1).text();
-    var pname = _td.eq(2).text();
-    var tComment = $('.tComment_'+tNo).val();    
+    let _td = $(this).closest('tr').children();
+    let tNo = _td.eq(0).text();
+    let sid = _td.eq(1).text();
+    let pname = _td.eq(2).text();
+    let tComment = $('.tComment_'+tNo).val();    
 
     //alert(`tNo : ${tNo}, sid : ${sid}, pname : ${pname}, tComment : ${tComment}`);
     showLoadingBar();
@@ -91,15 +91,15 @@ $(document).ready(function () {
 // 센서 list & info
 
 function process(sid,pname,selector) {
-  var intervalMinute = $('.tMinute_'+selector).val();
+  let intervalMinute = $('.tMinute_'+selector).val();
   processSub(sid,pname,intervalMinute,selector);
 }
 
 function processSub(sid,pname,intervalMinute,selector) {
 //  alert(`Process pname : ${pname}, sid : ${sid}, intervalMinute : ${intervalMinute}, selector : ${selector}`);
 
-  var iMinute = `-${intervalMinute} minutes`;
-  var _tr = $('.tPname_'+selector).closest('tr');
+  let iMinute = `-${intervalMinute} minutes`;
+  let _tr = $('.tPname_'+selector).closest('tr');
 
   showLoadingBar();
   
@@ -137,10 +137,10 @@ function processSub(sid,pname,intervalMinute,selector) {
 
 // 센서내역 접기
 function onoff(selector) {
-  var onoff = '.tOnoff_'+selector;
-  var tdLast = '.tdLast_'+selector;
-  var tDetail = '.tDetail_'+selector;
-  var text = $(onoff).text();
+  let onoff = '.tOnoff_'+selector;
+  let tdLast = '.tdLast_'+selector;
+  let tDetail = '.tDetail_'+selector;
+  let text = $(onoff).text();
 
   if ($(tdLast).css('display') == 'none') {
     $(tdLast).show();
@@ -156,8 +156,8 @@ function onoff(selector) {
 // 센서의 상세내역 접기
 function detail(selector) {
   
-  var sInfo = '.sInfo_'+selector;
-  var tDetail_off = '.tDetail_off_'+selector;
+  let sInfo = '.sInfo_'+selector;
+  let tDetail_off = '.tDetail_off_'+selector;
   
   if ($(sInfo).css('display') == 'none') {
     
@@ -172,10 +172,10 @@ function detail(selector) {
 
 /************* LoadingBar **************/
 function showLoadingBar() { 
-  var maskHeight = $(document).height();
-  var maskWidth = window.document.body.clientWidth;
-  var mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
-  var loadingImg = "";
+  let maskHeight = $(document).height();
+  let maskWidth = window.document.body.clientWidth;
+  let mask = "<div id='mask' style='position:absolute; z-index:9000; background-color:#000000; display:none; left:0; top:0;'></div>";
+  let loadingImg = "";
   loadingImg += "<div id='loadingImg' style='position:absolute; left:30%; top:40%; display:none; z-index:10000;'>";
   loadingImg += " <img src='./image/spinner.gif'/>";
   loadingImg += "</div>";

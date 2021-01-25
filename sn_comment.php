@@ -11,8 +11,8 @@ $tNow = date('Y-m-d H:i:s');
 Console_log("sid : $sid, pname : $pname, sn : $sn, sComment : $sComment, tNow : $tNow");
 //echo ("sid : $sid, pname : $pname, sComment : $sComment, tNow : $tNow");
 
-include('connect_db.php');
-include('dbConfig_personal.php');
+include('../connect_db.php');
+include('../dbConfig_personal.php');
 
 $str3 = "select * from sensor_comm where sid = '$sid' and pname = '$pname' and sn = '$sn'";
 

@@ -11,15 +11,15 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
     <script src="project_list.js" defter></script>
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="shortcut icon" href='../image/scsolicon.ico'>
 </head>
 
 <body>
     <h3>Motor Sensor Detail</h3>
     <?php
 
-    include('connect_db.php');
-    include('dbConfig_motor_v.php');
+    include('../connect_db.php');
+    include('../dbConfig_motor_v.php');
 
     $str2 = "SELECT sid as SID, pname as 프로젝트 FROM motor_project ORDER BY sid, pname";
     if (!($result2 = mysqli_query($conn2, $str2))) {
@@ -50,7 +50,7 @@
         $sid = $row[0];
         $pname = $row[1];
 
-        include('dbConfig_personal.php');
+        include('../dbConfig_personal.php');
         $str3 = "SELECT comment FROM project_comm where sid = '$sid' and pname ='$pname'";
 
         // Perform a query, check for error

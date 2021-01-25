@@ -14,8 +14,8 @@ $tNow = strtotime("Now");
 //echo ("sid : $sid,  pname : $pname,  iMinute : $iMinute");
 
 if (isset($pname)) {
-    include('connect_db.php');
-    include('dbConfig_motor_v.php');
+    include('../connect_db.php');
+    include('../dbConfig_motor_v.php');
 
     $output = '';
     /************************************/
@@ -42,10 +42,10 @@ if (isset($pname)) {
             if (substr($pname,0,5) =='a_dae') {
 
                 // 전류센서 DB
-                include('dbConfig_motor_a.php');
+                include('../dbConfig_motor_a.php');
                 
             } else if (substr($pname,0,5) !='v_dae') {
-                // 전동도 진동도 아닌 그 외 프로젝트
+                // 전류도 진동도 아닌 그 외 프로젝트
                 goto exception;
 
             } 
@@ -126,7 +126,7 @@ if (isset($pname)) {
                 $actnm2++;
             }
 
-            include('dbConfig_personal.php');
+            include('../dbConfig_personal.php');
             $str3 = "SELECT comment FROM sensor_comm where sid = '$sid' and pname ='$pname' and sn ='$sn'";
 
             // Perform a query, check for error
