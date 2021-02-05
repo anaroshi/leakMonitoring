@@ -15,17 +15,17 @@ $tNow = strtotime("Now");
 
 if (isset($pname)) {
     include('../connect_db.php');
-    include('../dbConfig_motor_v.php');
+    include('../dbConfig_leak.php');
 
     $output = '';
     /************************************/
-    //$str = "select sn from mecha_sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' GROUP BY sn ORDER BY sn";
-    $str = "select sn from mecha_sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' and chk_install = 1 GROUP BY sn ORDER BY sn";
-    if (!($result = mysqli_query($conn2, $str))) {
-        echo ("Error description: " . mysqli_error($conn2) . "query:" . $str);
+    //$str = "select sn from sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' GROUP BY sn ORDER BY sn";
+    $str = "select sn from sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' and chk_install = 1 GROUP BY sn ORDER BY sn";
+    if (!($result = mysqli_query($conn1, $str))) {
+        echo ("Error description: " . mysqli_error($conn1) . "query:" . $str);
     }
     $no1 = mysqli_num_rows($result);
-    // Console_log("-- 1 no1 :" . $no1);
+    //Console_log("-- 1 no1 :" . $no1);
 
     $no = 1;
     $actnm1 = 0;
@@ -39,13 +39,8 @@ if (isset($pname)) {
 
             $sn = stripslashes($row[0]);
             
-            if (substr($pname,0,5) =='a_dae') {
-
-                // 전류센서 DB
-                include('../dbConfig_motor_a.php');
-                
-            } else if (substr($pname,0,5) !='v_dae') {
-                // 전류도 진동도 아닌 그 외 프로젝트
+            if ($pname !='banwoldang') {
+                // 반월당이 그 외 프로젝트
                 goto exception;
 
             } 
@@ -55,8 +50,9 @@ if (isset($pname)) {
             
                 // SELECT * FROM `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where (sn, date) IN (SELECT sn, max(date) as date from `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where sid = 'mdaejeon' and project = 'v_daejeon_1' and sn = 'STFMB-20200312-0102-0001')
                 $str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname` where sid = '$sid' and project = '$pname' and sn = '$sn')";
-                if (!($result1 = mysqli_query($conn2, $str1))) {
-                    echo ("Error description: " . mysqli_error($conn2) . "query:" . $str1);
+                //echo $str1;
+                if (!($result1 = mysqli_query($conn1, $str1))) {
+                    echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
                 }
 
                 $no4 = mysqli_num_rows($result1);
@@ -82,8 +78,8 @@ if (isset($pname)) {
                 if (strlen($batt) < 1) $batt = '-';
                 $dbname2 = "leak_send_data_" . $sid . "_" . $sn;
                 $str2 = "select fname, complete, complete_time, fnum from `$dbname2` where sid = '$sid' and sn='$sn' and pname = '$pname' order by cid desc limit 1";
-                
-                $result2 = mysqli_query($conn2, $str2) or die(mysqli_error($conn2));
+                //echo '  str2 : '.$str2;
+                $result2 = mysqli_query($conn1, $str2) or die(mysqli_error($conn1));
                 $no2 = mysqli_num_rows($result2);
                 if ($no2 > 0) {
                     $row2 = mysqli_fetch_assoc($result2);
@@ -99,12 +95,13 @@ if (isset($pname)) {
                 /************************************/
                 $dbname3 = "leak_send_data_" . $sid . "_" . $sn;
                 $str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where pname = '$pname' and sid = '$sid' and sn ='$sn' and complete ='1'";
-                $result3 = mysqli_query($conn2, $str3) or die(mysqli_error($conn2));
+                // echo '  str3 : '.$str3;
+                $result3 = mysqli_query($conn1, $str3) or die(mysqli_error($conn1));
                 $no3 = mysqli_num_rows($result3);
                 $row = mysqli_fetch_assoc($result3);
                 $completeTime = stripslashes($row['complete_time']);
    
-            //$conn2->close();
+            //$conn1->close();
 
             if ($completeTime == 0) $completeTime = "none";
             $dmsg1 = "데이터 수집완료";
@@ -126,15 +123,15 @@ if (isset($pname)) {
                 $actnm2++;
             }
 
-            include('../dbConfig_personal.php');
+            include('../dbConfig_personal_leak.php');
             $str3 = "SELECT comment FROM sensor_comm where sid = '$sid' and pname ='$pname' and sn ='$sn'";
-
+            //echo '  str3 : '.$str3;
             // Perform a query, check for error
-            if (!($result3 = mysqli_query($conn3, $str3))) {
-                echo ("Error description: " . mysqli_error($conn3) . "query:" . $str3);
+            if (!($result3 = mysqli_query($conn5, $str3))) {
+                echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
             }
 
-            //            $conn3->close();
+            //            $conn5->close();
             $row3 = mysqli_fetch_assoc($result3);
             $sComm = $row3['comment'];
             $output .= "
@@ -232,6 +229,7 @@ $data['tNow'] = date("Y-m-d H:i:s", $tNow);
 $data['output'] = $output;
 $data['intervalMinute'] = $intervalMinute;
 $data['total'] = $no1;
+//echo $output;
 echo json_encode($data);
 
 function Console_log($logcontent)

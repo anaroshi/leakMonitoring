@@ -8,19 +8,13 @@ $(document).ready(function () {
   //  let sid = _td.eq(1).text();
     let intervalMinute =  _td.find('input').val();
         
-    let sid = 'mdaejeon';
+    let sid = 'daeguf';
 
     //alert(`tNo : ${tNo}, intervalMinute : ${intervalMinute}`);
 
     showLoadingBar();
 
-    processSub(sid,'a_daejeon_1',intervalMinute,'1');
-    processSub(sid,'a_daejeon_2',intervalMinute,'2');
-    processSub(sid,'a_daejeon_3',intervalMinute,'3');
-    processSub(sid,'v_daejeon_1',intervalMinute,'10');
-    processSub(sid,'v_daejeon_2',intervalMinute,'11');
-    processSub(sid,'v_daejeon_3',intervalMinute,'12');
-    
+    processSub(sid,'banwoldang',intervalMinute,'7');
     hideLoadingBar();
 
   }); 

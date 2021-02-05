@@ -15,18 +15,18 @@
 </head>
 
 <body>
-    <h3>Motor Sensor Detail</h3>
+    <!--  <h3>Leak Sensor Detail</h3>  -->
     <?php
 
     include('../connect_db.php');
-    include('../dbConfig_motor_v.php');
+    include('../dbConfig_leak.php');
 
-    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM motor_project ORDER BY sid, pname";
-    if (!($result2 = mysqli_query($conn2, $str2))) {
-        echo ("Error description: " . mysqli_error($conn2) . "query:" . $str2);
+    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project ORDER BY sid, pname";
+    if (!($result2 = mysqli_query($conn1, $str2))) {
+        echo ("Error description: " . mysqli_error($conn1) . "query:" . $str2);
     }
 
-    $conn2->close();
+    $conn1->close();
 
     // 테이블 상단
     $HTML_STR = "
@@ -50,14 +50,14 @@
         $sid = $row[0];
         $pname = $row[1];
 
-        include('../dbConfig_personal.php');
+        include('../dbConfig_personal_leak.php');
         $str3 = "SELECT comment FROM project_comm where sid = '$sid' and pname ='$pname'";
 
         // Perform a query, check for error
-        if (!($result3 = mysqli_query($conn3, $str3))) {
-            echo ("Error description: " . mysqli_error($conn3) . "query:" . $str3);
+        if (!($result3 = mysqli_query($conn5, $str3))) {
+            echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
         }
-        $conn3->close();
+        $conn5->close();
         $row3 = mysqli_fetch_assoc($result3);
         $tComm = $row3['comment'];
 

@@ -12,26 +12,26 @@ Console_log("sid : $sid, pname : $pname, sn : $sn, sComment : $sComment, tNow : 
 //echo ("sid : $sid, pname : $pname, sComment : $sComment, tNow : $tNow");
 
 include('../connect_db.php');
-include('../dbConfig_personal.php');
+include('../dbConfig_personal_leak.php');
 
 $str3 = "select * from sensor_comm where sid = '$sid' and pname = '$pname' and sn = '$sn'";
 
-if (!($result3 = mysqli_query($conn3, $str3))) {
-    echo ("Error description: " . mysqli_error($conn3) . "query:" . $str3);
+if (!($result3 = mysqli_query($conn5, $str3))) {
+    echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
 }
 $num = mysqli_num_rows($result3);
 
 if ($num > 0) {
     // update
     $str3 = "update sensor_comm set sid = '$sid' , pname = '$pname', sn = '$sn', comment = '$sComment', date = '$tNow' where sid ='$sid' and pname = '$pname' and sn = '$sn'";
-    if (!($result3 = mysqli_query($conn3, $str3))) {
-        echo ("Error description: " . mysqli_error($conn3) . "query:" . $str3);
+    if (!($result3 = mysqli_query($conn5, $str3))) {
+        echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
     }
 } else {
     // insert
     $str3 = "insert into sensor_comm (sid,pname,sn,comment,date) values ('$sid','$pname','$sn','$sComment','$tNow')";
-    if (!($result3 = mysqli_query($conn3, $str3))) {
-        echo ("Error description: " . mysqli_error($conn3) . "query:" . $str3);
+    if (!($result3 = mysqli_query($conn5, $str3))) {
+        echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
     }
 }
 
