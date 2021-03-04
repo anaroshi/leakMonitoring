@@ -13,8 +13,11 @@ $(document).ready(function () {
     //alert(`tNo : ${tNo}, intervalMinute : ${intervalMinute}`);
 
     showLoadingBar();
-
+    
+    // **************  새 프로젝트 추가작업은 여기서
     processSub(sid,'banwoldang',intervalMinute,'7');
+    processSub(sid,'dongseongro',intervalMinute,'14');
+    processSub('producttest','testnone',intervalMinute,'54');
     hideLoadingBar();
 
   }); 
@@ -121,6 +124,13 @@ function processSub(sid,pname,intervalMinute,selector) {
         _tr.find('.tOnoff').text('None');
         _tr.find('.tDetail').css('visibility','hidden');
       }
+
+      // default
+      $('.sInfo').hide()
+      $('.hDetail').text('∨');
+      $('.hDetail').css('background-color','#feb546');
+      $('.hDetail').css('color','#4d4d4d');
+      
     })
     .fail(function (jqXHR, textStatus, errorThrown) {
       console.log('서버오류: ' + textStatus);

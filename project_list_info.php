@@ -38,69 +38,73 @@ if (isset($pname)) {
         if ($no1 > 0) {
 
             $sn = stripslashes($row[0]);
-            
-            if ($pname !='banwoldang') {
-                // 반월당이 그 외 프로젝트
+/**
+ * 프로젝트 추가시
+ * 여기서 작업해주어야함.
+ * 
+ * 
+ *  */            
+            if ($pname !='banwoldang' and  $pname !='dongseongro' and $pname !='testnone') {
+                // 반월당과 동성로 그 외 프로젝트
                 goto exception;
 
             } 
-
                 
-                $dbname = "sensor_report_" . $sid . "_" . $sn;
-            
-                // SELECT * FROM `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where (sn, date) IN (SELECT sn, max(date) as date from `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where sid = 'mdaejeon' and project = 'v_daejeon_1' and sn = 'STFMB-20200312-0102-0001')
-                $str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname` where sid = '$sid' and project = '$pname' and sn = '$sn')";
-                //echo $str1;
-                if (!($result1 = mysqli_query($conn1, $str1))) {
-                    echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
-                }
+            $dbname = "sensor_report_" . $sid . "_" . $sn;
+        
+            // SELECT * FROM `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where (sn, date) IN (SELECT sn, max(date) as date from `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where sid = 'mdaejeon' and project = 'v_daejeon_1' and sn = 'STFMB-20200312-0102-0001')
+            $str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname` where sid = '$sid' and project = '$pname' and sn = '$sn')";
+            //echo $str1;
+            if (!($result1 = mysqli_query($conn1, $str1))) {
+                echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
+            }
 
-                $no4 = mysqli_num_rows($result1);
+            $no4 = mysqli_num_rows($result1);
 
-                $row1 = mysqli_fetch_assoc($result1);
+            $row1 = mysqli_fetch_assoc($result1);
 
-                $tdate = strtotime($row1['date']);
-                $date = stripslashes($row1['date']);
-                $px = stripslashes($row1['px']);
-                $py = stripslashes($row1['py']);
-                $t1 = stripslashes($row1['time1']);
-                $t2 = stripslashes($row1['time2']);
-                $t3 = stripslashes($row1['time3']);
-                $ert = stripslashes($row1['end_record_time']);
-                $fm = stripslashes($row1['fm']);
-                $fver = stripslashes($row1['fver']);
-                $rssi = stripslashes($row1['rssi']);
-                $status = stripslashes($row1['status']);
-                $sample = stripslashes($row1['sample']);
-                $period = stripslashes($row1['period']);
-                $batt = stripslashes($row1['batt']);
+            $tdate = strtotime($row1['date']);
+            $date = stripslashes($row1['date']);
+            $px = stripslashes($row1['px']);
+            $py = stripslashes($row1['py']);
+            $t1 = stripslashes($row1['time1']);
+            $t2 = stripslashes($row1['time2']);
+            $t3 = stripslashes($row1['time3']);
+            $ert = stripslashes($row1['end_record_time']);
+            $fm = stripslashes($row1['fm']);
+            $fver = stripslashes($row1['fver']);
+            $rssi = stripslashes($row1['rssi']);
+            $status = stripslashes($row1['status']);
+            $sample = stripslashes($row1['sample']);
+            $period = stripslashes($row1['period']);
+            $batt = stripslashes($row1['batt']);
 
-                if (strlen($batt) < 1) $batt = '-';
-                $dbname2 = "leak_send_data_" . $sid . "_" . $sn;
-                $str2 = "select fname, complete, complete_time, fnum from `$dbname2` where sid = '$sid' and sn='$sn' and pname = '$pname' order by cid desc limit 1";
-                //echo '  str2 : '.$str2;
-                $result2 = mysqli_query($conn1, $str2) or die(mysqli_error($conn1));
-                $no2 = mysqli_num_rows($result2);
-                if ($no2 > 0) {
-                    $row2 = mysqli_fetch_assoc($result2);
-                    $fname = stripslashes($row2['fname']);
-                    $complete = stripslashes($row2['complete']);
-                    $complete_time = stripslashes($row2['complete_time']);
-                    $fnum = stripslashes($row2['fnum']);
+            if (strlen($batt) < 1) $batt = '-';
+            $dbname2 = "leak_send_data_" . $sid . "_" . $sn;
+            $str2 = "select fname, complete, complete_time, fnum from `$dbname2` where sid = '$sid' and sn='$sn' and pname = '$pname' order by cid desc limit 1";
+            //echo '  str2 : '.$str2;
+            $result2 = mysqli_query($conn1, $str2) or die(mysqli_error($conn1));
+            $no2 = mysqli_num_rows($result2);
+            if ($no2 > 0) {
+                $row2 = mysqli_fetch_assoc($result2);
+                $fname = stripslashes($row2['fname']);
+                $complete = stripslashes($row2['complete']);
+                $complete_time = stripslashes($row2['complete_time']);
+                $fnum = stripslashes($row2['fnum']);
 
-                    if (!strcmp($complete, "1") && $fnum >= 160) $dmsg = "데이터 수집완료 : $complete_time";
-                    else $dmsg = "데이터 수집실패";
-                }
+                if (!strcmp($complete, "1") && $fnum >= 160) $dmsg = "데이터 수집완료 : $complete_time";
+                else $dmsg = "데이터 수집실패";
+            }
 
-                /************************************/
-                $dbname3 = "leak_send_data_" . $sid . "_" . $sn;
-                $str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where pname = '$pname' and sid = '$sid' and sn ='$sn' and complete ='1'";
-                // echo '  str3 : '.$str3;
-                $result3 = mysqli_query($conn1, $str3) or die(mysqli_error($conn1));
-                $no3 = mysqli_num_rows($result3);
-                $row = mysqli_fetch_assoc($result3);
-                $completeTime = stripslashes($row['complete_time']);
-   
+            /************************************/
+            $dbname3 = "leak_send_data_" . $sid . "_" . $sn;
+            $str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where pname = '$pname' and sid = '$sid' and sn ='$sn' and complete ='1'";
+            // echo '  str3 : '.$str3;
+            $result3 = mysqli_query($conn1, $str3) or die(mysqli_error($conn1));
+            $no3 = mysqli_num_rows($result3);
+            $row = mysqli_fetch_assoc($result3);
+            $completeTime = stripslashes($row['complete_time']);
+
             //$conn1->close();
 
             if ($completeTime == 0) $completeTime = "none";
