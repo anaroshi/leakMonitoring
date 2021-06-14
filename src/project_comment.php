@@ -9,8 +9,12 @@ $tNow = date('Y-m-d H:i:s');
 
 //echo ("sid : $sid, pname : $pname, tComment : $tComment, tNow : $tNow");
 
-include('../connect_db.php');
-include('../dbConfig_personal_leak.php');
+
+include($_SERVER['DOCUMENT_ROOT'] . "/connect_db.php");
+include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_personal_leak.php");
+
+// include('../connect_db.php');
+// include('../dbConfig_personal_leak.php');
 
 $str3 = "select * from project_comm where sid = '$sid' and pname = '$pname'";
 

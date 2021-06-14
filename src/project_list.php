@@ -4,22 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MOTOR SENSOR VIEW</title>
+    <title>LEAK SENSOR VIEW</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
-    <script src="project_list.js" defter></script>
-    <link rel="stylesheet" href="style.css">
+    <script src="../js/project_list.js" defter></script>
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="shortcut icon" href='../image/scsolicon.ico'>
 </head>
 
 <body>
     <!--  <h3>Leak Sensor Detail</h3>  -->
     <?php
+    error_reporting(E_ALL);
+    ini_set("display_errors", 1);
 
-    include('../connect_db.php');
-    include('../dbConfig_leak.php');
+    include($_SERVER['DOCUMENT_ROOT'] . "/connect_db.php");
+    include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_leak.php");
 
     $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project ORDER BY sid, pname";
     if (!($result2 = mysqli_query($conn1, $str2))) {
@@ -39,7 +41,7 @@
             <th class ='hTotal'>Last</th>
             <th class ='hSum'>완료</th>
             <th class ='hNow'>조회시점</th>
-            <th class ='hMinute'><input type='text' class ='hhMinute' name='hMinute' size='3' value ='10'>분전</th>            
+            <th class ='hMinute'><input type='text' class ='hhMinute' name='hMinute' size='3' value ='60'>분전</th>            
             <th class ='hOnoff'>On/Off</th>
             <th class ='hDetail'>∧</th>
         </thead>
@@ -50,7 +52,8 @@
         $sid = $row[0];
         $pname = $row[1];
 
-        include('../dbConfig_personal_leak.php');
+        include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_personal_leak.php");
+
         $str3 = "SELECT comment FROM project_comm where sid = '$sid' and pname ='$pname'";
 
         // Perform a query, check for error
@@ -71,7 +74,7 @@
             <td class='tInicial'><div class='tTotal' id='tTotal'></div></td>
             <td class='tInicial'><div class='tSum' id='tSum'></div></td>
             <td class='tInicial'><div class='tNow' id='tNow'></div></td>
-            <td class='tInicial'><input type='text' class='tMinute tMinute_$no' name='tMinute' size='3' value ='10'>분전</td>
+            <td class='tInicial'><input type='text' class='tMinute tMinute_$no' name='tMinute' size='3' value ='60'>분전</td>
             <td class='tInicial'><button class='tOnoff tOnoff_$no' id='tOnoff' type='button' value='$sid' onClick='onoff($no)'>On/Off</button></td>
             <td class='tInicial'><div class='tDetail'><button class='tDetail_off tDetail_off_$no' id='tDetail_off' type='button' onClick='detail($no)'>∧</button></div></td>
         </tr>
@@ -88,15 +91,15 @@
     function Console_log($logcontent)
     {
         echo "<script>
-        console.log('$logcontent');
-    </script>";
+            console.log('$logcontent');
+        </script>";
     }
 
     function Alert_log($logcontent)
     {
         echo "<script>
-        alert('$logcontent');
-    </script>";
+            alert('$logcontent');
+        </script>";
     }
     ?>
 </body>

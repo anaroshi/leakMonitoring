@@ -1,0 +1,141 @@
+/* Global*/
+:root {
+  /* Color */
+  --color-white: #ffffff;
+  --color-light-white: #eeeeee;
+  --color-dark-white: #bdbdbd;
+  --color-pink: #fe918d;
+  --color-dark-pink: #ff6863;
+  --color-rusty: #c75000;
+  --color-light-rusty: #544c3e;
+  --color-dark-rusty: #403828;
+  --color-dark-grey: #4d4d4d;
+  --color-grey: #616161;
+  --color-light-grey: #7c7979;
+  --color-blue: #73aace;
+  --color-yellow: #fff7d1;
+  --color-orange: #feb546;
+  --color-black: #000000;
+  --color-1-grey: #f0f0f1;
+  --color-2-grey: #e1e1e3;
+  --color-3-grey: #d2d2d5;
+  --color-4-grey: #c3c3c7;
+  --color-5-grey: #b5b4b9;
+  --color-6-grey: #a6a4ab;
+  --color-7-grey: #97959d;
+  --color-8-grey: #88868f;
+  --color-9-grey: #797781;
+  --color-10-grey: #6a6873;
+
+  /* Font size */
+  --font-large: 48px;
+  --font-medium: 28px;
+  --font-regular: 18px;
+  --font-small: 16px;
+  --font-micro: 14px;
+  --font-nano: 12px;
+  --font-pico: 10px;
+  --font-femto: 8px;
+
+  /* Font weight */
+  --weight-bold: 700;
+  --weight-semi-bold: 600;
+  --weight-regular: 400;
+
+  /* Size */
+  --avatar-szie: 35px;
+  --size-border-radius: 4px;
+}
+
+/* Body */
+body {
+  color: var(--color-dark-grey);
+  font-size: var(--font-nano);
+  font-family: "Open Sans", sans-serif;
+  border: none;
+  background-color: var(--color-light-white);
+  cursor: default;
+  width: 1800px;  
+  margin-top: 0;
+  padding: 0;
+  height: 90vh;
+}
+
+.report_all_btn {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.report_btn {
+  background-color: var(--color-dark-rusty);
+  border-color: var(--color-dark-rusty);
+  color: var(--color-white);
+  margin: 0.1em 0.2em;
+  user-select: none;
+  border-radius: 5px;
+  font-size: var(--font-nano);
+  width: 120px;
+  height: 30px;  
+}
+
+.report_btn:hover {
+  cursor: pointer;
+  color: var(--color-pink);
+}
+
+.backPage,
+.title.title2 {
+  margin-right: 17px;
+}
+
+table {
+  font-size: var(--font-nano); 
+}
+
+thead {
+  background-color: var(--color-dark-rusty);
+  color: var(--color-light-white); 
+}
+
+.title1 {
+  text-align: center;
+}
+
+.title2 {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-micro); 
+  font-weight: var(--weight-semi-bold);
+}
+
+td {
+  text-align: center;  
+}
+
+.b_leakStatus,
+.b_snStatus,
+.b_pipeInfo,
+.b_comm {
+  padding: 0px 5px 0px 5px;
+}
+
+.hComm {
+  width: 580px;
+}
+
+.b_Comm,
+.comm {
+  width: 580px;
+  text-align: left;
+}
+
+.b_leakStatus,
+.b_snStatus,
+.b_pipeInfo,
+.b_comm {
+  padding: 0px;
+}
+
+h1 {
+  margin: 0px;
+}
