@@ -165,9 +165,16 @@ while ($row = mysqli_fetch_array($result)) {
   $row3         = mysqli_fetch_array($result3);
   $leakStatus   = $row3['leakStatus'] ?? '';
   $sensorStatus = $row3['sensorStatus'] ?? '';
-  $pipeInfo     = $row3['pipeInfo'] ?? '';
   $comm         = $row3['comm'] ?? '';
 
+  $sql4     = "SELECT * FROM (SELECT sn, material FROM sensor_list where sid = '$sid' and pname = '$pname' ";
+  $sql4     .= "and sn = '$sn' and col_valid != '-1' ORDER BY cid DESC) AS sensor_list GROUP BY sn ";
+  
+  if (!($result4 = mysqli_query($conn1, $sql4))) {
+    echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql4);
+  }
+  $row4         = mysqli_fetch_array($result4);
+  $material     = $row4['material'] ?? '';
 
   // Excel File Contents
   $sheet->setCellValue("A$i", $no)
@@ -183,7 +190,7 @@ while ($row = mysqli_fetch_array($result)) {
     ->setCellValue("K$i", $batt5)
     ->setCellValue("L$i", $leakStatus)
     ->setCellValue("M$i", $sensorStatus)
-    ->setCellValue("N$i", $pipeInfo)
+    ->setCellValue("N$i", $material)
     ->setCellValue("O$i", $comm);
 
   ++$i;

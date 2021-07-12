@@ -1,11 +1,18 @@
 <?php
 
-$sid = $_POST["sid"];
-$pname = $_POST["pname"];
+header("Pragma: no-cache");
+header("Cache: no-cache");
+header("Cache-Control: no-cache, must-revalidate");
+header("Last-Modified:".gmdate("D, d M Y H:i:s")."GMT");
+header("Expires:Mon, 26 Jul 1997 05:00:00 GMT");
+
+$sid    = $_POST["sid"];
+$pname  = $_POST["pname"];
 $intervalMinute = $_POST["intervalMinute"];
 $iMinute = $_POST["iMinute"];
 $selector = $_POST["selector"];
-$data = array();
+$data   = array();
+$inform = "NO DATA";
 
 date_default_timezone_set('Asia/Seoul');
 $timestamp = strtotime($iMinute);
@@ -16,9 +23,7 @@ $tNow = strtotime("Now");
 if (isset($pname)) {
 
     include($_SERVER['DOCUMENT_ROOT'] . "/connect_db.php");
-    include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_leak.php");
-    // include('../connect_db.php');
-    // include('../dbConfig_leak.php');
+    include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_leak.php");    
 
     $output = '';
     /************************************/
@@ -45,15 +50,20 @@ if (isset($pname)) {
 /**
  * 프로젝트 추가작업해주어야함.
  * 
- * 
- *  */            
+ **/            
             if ($pname !='daeguall' and $pname !='duryu' and $pname !='gachang' and $pname !='gachang_plus' and $pname !='padong' and $sid !='producttest' and $sid !='goesan' and $sid !='gochang' and $sid !='gapyeong') {
                 // 반월당과 동성로 그 외 프로젝트
                 goto exception;
+            }       
 
-            } 
-                
-            $dbname = "sensor_report_" . $sid . "_" . $sn;
+            $dbname         = "sensor_report_" . $sid . "_" . $sn;
+            $sql            = "SHOW tables LIKE '$dbname' ";
+            $result_exist   = mysqli_query($conn1, $sql);
+
+            if(!mysqli_num_rows($result_exist) > 0) {                
+                $inform = "[ ".$dbname." ] 테이블이 생성되어 있지 않습니다.";
+                goto exception;
+            }
         
             // SELECT * FROM `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where (sn, date) IN (SELECT sn, max(date) as date from `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where sid = 'mdaejeon' and project = 'v_daejeon_1' and sn = 'STFMB-20200312-0102-0001')
             //$str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname` where sid = '$sid' and project = '$pname' and sn = '$sn')";
@@ -194,7 +204,7 @@ if (isset($pname)) {
                     <td class='sInicial'><div class='sSid hide' id='sSid'>" . $sid . "</div></td>
                     <td class='sInicial'><div class='sPanme hide' id='sPanme'>" . $pname . "</div></td>
                     <td class='sInicial'><div class='sSn' id='sSn'>" . $sn . "</div></td>
-                    <td class='sInicial nodata' colspan='7'>NO DATA</td>
+                    <td class='sInicial nodata' colspan='7'>$inform</td>
                 </tr>
             </table>
             ";

@@ -54,17 +54,17 @@ while ($row = mysqli_fetch_array($result)) {
   $install  = $row['install'];                          // 설치일자
 
   $dbname1  = "sensor_report_" . $sid . "_" . $sn;
-  $str1     = "SELECT date FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
-  if (!($result1 = mysqli_query($conn1, $str1))) {
-    echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
+  $sql1     = "SELECT date FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
+  if (!($result1 = mysqli_query($conn1, $sql1))) {
+    echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql1);
   }
   $row1     = mysqli_fetch_assoc($result1);
   $date     = stripslashes($row1['date']);              // 최종 보고
 
   $dbname2  = "leak_send_data_" . $sid . "_" . $sn;
-  $str2     = "SELECT max(complete_time) as complete_time from `$dbname2` where complete ='1'";
-  if (!($result2 = mysqli_query($conn1, $str2))) {
-    echo ("Error description: " . mysqli_error($conn1) . "query:" . $str2);
+  $sql2     = "SELECT max(complete_time) as complete_time from `$dbname2` where complete ='1'";
+  if (!($result2 = mysqli_query($conn1, $sql2))) {
+    echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql2);
   }
   $row2     = mysqli_fetch_assoc($result2);
   $completeTime = stripslashes($row2['complete_time']); // 최종 데이터 수집
@@ -79,19 +79,26 @@ while ($row = mysqli_fetch_array($result)) {
 
 
   // 센서별 누수여부, 센서상태, 관정보, 특이사항 정보 가져옴.
-  $str3     = "SELECT * FROM leak_report WHERE sid = '$sid' and pname = '$pname' and sn = '$sn'";
-  if (!($result3 = mysqli_query($conn5, $str3))) {
-    echo ("Error description: " . mysqli_error($conn5) . "query:" . $str3);
+  $sql3     = "SELECT * FROM leak_report WHERE sid = '$sid' and pname = '$pname' and sn = '$sn'";
+  if (!($result3 = mysqli_query($conn5, $sql3))) {
+    echo ("Error description: " . mysqli_error($conn5) . "query:" . $sql3);
   }
   $row3         = mysqli_fetch_array($result3);
   $leakStatus   = $row3['leakStatus'] ?? '';
   $sensorStatus = $row3['sensorStatus'] ?? '';
-  $pipeInfo     = $row3['pipeInfo'] ?? '';
   $comm         = $row3['comm'] ?? '';
 
   $outputLeakStatus_list    = getLeakStatusList($leakStatus, $conn5);
-  $outputSensorStatus_list  = getSensorStatusList($sensorStatus, $conn5);
-  $outputPipe_list          = getPipeList($pipeInfo, $conn5);
+  $outputSensorStatus_list  = getSensorStatusList($sensorStatus, $conn5); 
+
+  $sql4     = "SELECT * FROM (SELECT sn, material FROM sensor_list where sid = '$sid' and pname = '$pname' ";
+  $sql4     .= "and sn = '$sn' and col_valid != '-1' ORDER BY cid DESC) AS sensor_list GROUP BY sn ";
+  
+  if (!($result4 = mysqli_query($conn1, $sql4))) {
+    echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql4);
+  }
+  $row4         = mysqli_fetch_array($result4);
+  $material     = $row4['material'] ?? '';
 
   ++$no;
   $outputList .= "  
@@ -109,11 +116,10 @@ while ($row = mysqli_fetch_array($result)) {
       <td class ='b_report b_battery5'>$batt5</td>
       <td class ='b_report b_leakStatus'><select class='leakStatus_list'>$outputLeakStatus_list</select></td>
       <td class ='b_report b_snStatus'><select class='sensorStatus_list'>$outputSensorStatus_list</select></td>
-      <td class ='b_report b_pipeInfo'><select class='pipe_list' id='pipe_list'>$outputPipe_list</select></td>
       <td class ='b_report b_comm'><input type='text' class='comm' name='comm' value ='" . $comm . "'></td>
       <td class ='b_report leakStatusTxt'>$leakStatus</td>
       <td class ='b_report snStatusTxt'>$sensorStatus</td>
-      <td class ='b_report pipeInfoTxt'>$pipeInfo</td>
+      <td class ='b_report pipeInfoTxt'>$material</td>
     </tr>
   ";
 
@@ -122,7 +128,7 @@ while ($row = mysqli_fetch_array($result)) {
   // $sql4 .= "leakStatus, sensorStatus, pipe, comm, inDate) ";
   // $sql4 .= "VALUES ( '$sid', '$pname', '$v_no', '$install', '$sn', '$date', '$completeTime', '$setDate[4]', '$batt1', ";
   // $sql4 .= "'$setDate[3]', '$batt2', '$setDate[2]', '$batt3', '$setDate[1]', '$batt4', '$setDate[0]', ";
-  // $sql4 .= "'$batt5', '$leakStatus', '$sensorStatus', '$pipeInfo', '$comm', now())";
+  // $sql4 .= "'$batt5', '$leakStatus', '$sensorStatus', '$material', '$comm', now())";
 
   // if (!($result4 = mysqli_query($conn5, $sql4))) {
   //   echo ("Error description: " . mysqli_error($conn5) . "query:" . $sql4);
@@ -182,8 +188,7 @@ $conn5->close();
           <th class='hfinalData' rowspan='2'>최종 보고</th>
           <th class='hfinalReport' rowspan='2'>최종 데이터수집</th>
           <th class='hBattery' colspan='5'>배터리</th>
-          <th class='hStatus' colspan='2'>상태</th>
-          <th class='hPipeInfo' rowspan='2'>관정보</th>
+          <th class='hStatus' colspan='2'>상태</th>          
           <th class='hComm' rowspan='2'>특이사항</th>
           <th class='hLeakStatusTxt' rowspan='2'>누수여부</th>
           <th class='hSnStatusTxt' rowspan='2'>센서상태</th>
@@ -253,39 +258,16 @@ $conn5->close();
     return $outputSensorStatus_list;
   }
 
-
-  /**
-   * 관정보 LIST
-   * table    : pipe_list
-   * $outputPipe_list
-   * default  : 공백, value : 
-   */
-  function getPipeList($pipeInfo,$conn5) {
-    $outputPipe_list = '';
-    $sql    = "select pipe from pipe_list order by pipe asc";
-
-    $result = mysqli_query($conn5, $sql);
-    $outputPipe_list .= '<option value = "">&nbsp;</option>';
-    while ($row = mysqli_fetch_array($result)) {
-      if ($pipeInfo==$row["pipe"])
-        $outputPipe_list .= '<option value = "' . $row["pipe"] . '" selected>' . $row["pipe"] . '</option>';
-      else  
-        $outputPipe_list .= '<option value = "' . $row["pipe"] . '">' . $row["pipe"] . '</option>';
-    }
-    return $outputPipe_list;
-  }  
-
-
   /**
    * Battery Value
    * table    : sensor_report_ . $sid . _ . $sn
-   * $outputPipe_list
+   * $batt
    */
   function getBatt($sid,$sn,$setDate1,$setDate2,$conn1) {
     $dbname  = "sensor_report_" . $sid . "_" . $sn;
-    $str     = "SELECT date, batt FROM `$dbname` WHERE date BETWEEN date('" . $setDate1 . "') AND date('" . $setDate2 . "') GROUP BY date(date) ";
-    if (!($result = mysqli_query($conn1, $str))) {
-      echo ("Error description: " . mysqli_error($conn1) . "query:" . $str);
+    $sql     = "SELECT date, batt FROM `$dbname` WHERE date BETWEEN date('" . $setDate1 . "') AND date('" . $setDate2 . "') GROUP BY date(date) ";
+    if (!($result = mysqli_query($conn1, $sql))) {
+      echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql);
     }
     $battNum  = mysqli_num_rows($result);
     if ($battNum < 1) {

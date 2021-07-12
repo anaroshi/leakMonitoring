@@ -20,10 +20,16 @@
     error_reporting(E_ALL);
     ini_set("display_errors", 1);
 
+    header("Pragma: no-cache");
+    header("Cache: no-cache");
+    header("Cache-Control: no-cache, must-revalidate");
+    header("Last-Modified:".gmdate("D, d M Y H:i:s")."GMT");
+    header("Expires:Mon, 26 Jul 1997 05:00:00 GMT");
+
     include($_SERVER['DOCUMENT_ROOT'] . "/connect_db.php");
     include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_leak.php");
 
-    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project ORDER BY sid, pname";
+    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project WHERE left(sid,5) != 'test_' ORDER BY sid, pname";
     if (!($result2 = mysqli_query($conn1, $str2))) {
         echo ("Error description: " . mysqli_error($conn1) . "query:" . $str2);
     }
@@ -88,18 +94,9 @@
     $HTML_STR .= "</table>";
     echo $HTML_STR;
 
-    function Console_log($logcontent)
-    {
-        echo "<script>
-            console.log('$logcontent');
-        </script>";
-    }
-
-    function Alert_log($logcontent)
-    {
-        echo "<script>
-            alert('$logcontent');
-        </script>";
-    }
     ?>
+    <div class="ui">    
+        <span class="ui">&copy;2021 JH SUNG</span>
+    </div>
 </body>
+</html>

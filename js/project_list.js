@@ -15,15 +15,14 @@ $(document).ready(function () {
 
     showLoadingBar();
 
-    // **************  프로젝트 추가작업은 여기서
-    processSub(sid, 'daeguall', intervalMinute, '8');
+    // **************  프로젝트 추가작업은 여기서   
     processSub(sid, 'duryu', intervalMinute, '15');
     processSub(sid, 'gachang', intervalMinute, '16');
     processSub(sid, 'gachang_plus', intervalMinute, '17');
     processSub(sid, 'padong', intervalMinute, '18');
     processSub('gapyeong', 'gapyeong', intervalMinute, '25');
-    processSub('gochang', 'gochang', intervalMinute, '26');
-    processSub('goesan', 'yunpung', intervalMinute, '27');
+    processSub('gochang', 'gochang_namgu', intervalMinute, '27');
+    processSub('goesan', 'goesan', intervalMinute, '28');
     hideLoadingBar();
 
   });

@@ -31,7 +31,7 @@ $(document).ready(function () {
     _td         = $(this).closest('tr').children();
     sn          = _td.eq(3).text();
     leakStatus  = $(this).val();
-    _td.eq(15).text(leakStatus);
+    _td.eq(14).text(leakStatus);
   });
  
 
@@ -43,51 +43,8 @@ $(document).ready(function () {
     _td           = $(this).closest('tr').children();
     sn            = _td.eq(3).text();
     sensorStatus  = $(this).val();
-    _td.eq(16).text(sensorStatus);
+    _td.eq(15).text(sensorStatus);
   });
- 
-
-  /**
-   * 관정보
-   */
-  $('.pipe_list').on('change', function (e) {
-    e.preventDefault();
-    _td           = $(this).closest('tr').children();
-    sn            = _td.eq(3).text();
-    pipeInfo      = $(this).val();
-    pipeInfoTxt   = _td.eq(17).text().trim();    
-    if (pipeInfoTxt == "") {
-      _td.eq(17).text(pipeInfo);
-      pipeInfoTxt = pipeInfo;
-    } else {     
-
-      const arr = pipeInfoTxt.split(", ");
-      let duplicatedText = 0;
-      let i =0;
-      let pipeInfoFinalTxt ="";
-      for (i=0;i<arr.length;i++) {
-        console.log(arr[i]);
-        if (arr[i]==pipeInfo) {
-          duplicatedText = 1;
-        } else {
-          if (arr[i] == arr[0]) {
-            pipeInfoFinalTxt += (arr[i]);
-          } else {
-            pipeInfoFinalTxt += (", "+arr[i]);
-          }
-        }
-      }
-      if (duplicatedText == 0) {
-        if (pipeInfo.length>1) {
-          pipeInfoTxt += (", "+pipeInfo);
-          _td.eq(17).text(pipeInfoTxt);
-        }
-      } else {
-        _td.eq(17).text(pipeInfoFinalTxt);
-      }
-    }
-  });
-
 
   $('.comm').on('focusout', function (e) {
     e.preventDefault();
@@ -149,7 +106,7 @@ $(document).ready(function () {
       sensorStatus  = _tr.find('.snStatusTxt').text();
       pipeInfo      = _tr.find('.pipeInfoTxt').text();
       comm          = _tr.find('.comm').val(); 
-      //console.log(`${sn}_${leakStatus}_${sensorStatus}_${pipeInfo}_${comm}`);
+      console.log(`${sn}_${leakStatus}_${sensorStatus}_${pipeInfo}_${comm}`);
 
       $.ajax({
         type: "POST",
