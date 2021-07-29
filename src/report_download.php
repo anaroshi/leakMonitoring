@@ -51,6 +51,7 @@ $spreadsheet->getProperties()->setCreator('jhsung')
   ->setCategory('Sensor Monitoring file');
 
 // Font Size
+$spreadsheet->getDefaultStyle()->getFont()->setName('맑은고딕');
 $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
 // Cell Merge
@@ -125,6 +126,11 @@ $sensorNum  = mysqli_num_rows($result);
 
 $no = 0;
 
+$cellMonitoring   = array();
+$cellLeakDoubt    = array();
+$cellLeaking      = array();
+
+
 while ($row = mysqli_fetch_array($result)) {
   ++$no;
   
@@ -192,6 +198,46 @@ while ($row = mysqli_fetch_array($result)) {
     ->setCellValue("M$i", $sensorStatus)
     ->setCellValue("N$i", $material)
     ->setCellValue("O$i", $comm);
+    
+    // 누수여부
+    switch ($leakStatus) {
+      case "모니터링":
+        $spreadsheet->getActiveSheet()->getStyle("L$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFC6EFCE'); //198 239 206
+        break;
+      case "누수의심":
+        $spreadsheet->getActiveSheet()->getStyle("L$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFFFEB9C'); //255 235 156
+        break;
+      case "누수확실":
+        $spreadsheet->getActiveSheet()->getStyle("L$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFFFC7CE');  //255 199 206
+        break;
+    }
+
+    // 센서상태
+    switch ($sensorStatus) {
+      case "방전의심":
+        $spreadsheet->getActiveSheet()->getStyle("M$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFB2A1C7'); //178 161 199
+        break;
+      case "침수의심":
+        $spreadsheet->getActiveSheet()->getStyle("M$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFB8CCE4'); //184 204 228 
+        break;
+      case "통신중단":
+      case "통신중단(방전)":
+      case "통신중단(침수)":  
+        $spreadsheet->getActiveSheet()->getStyle("M$i")->getFill()
+        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+        ->getStartColor()->setARGB('FFA5A5A5'); //165 165 165
+        break;
+    }
 
   ++$i;
 }
@@ -251,14 +297,14 @@ $spreadsheet->getActiveSheet()->getStyle("A2:O2")->getFont()->setSize(12);
 $spreadsheet->getActiveSheet()->getStyle('A3:O4')->getFill()
     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
     ->getStartColor()->setARGB('00FFFF');
-$spreadsheet->getActiveSheet()->getStyle("A5:A$i")->getFill()
-    ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
-    ->getStartColor()->setARGB('FF0000FF');
+// $spreadsheet->getActiveSheet()->getStyle("A5:A$i")->getFill()
+//     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+//     ->getStartColor()->setARGB('FF0000FF');
 
 
 // Text align : center
 $sheet->getStyle("A1:O1")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A3:O$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A3:N$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 // Text align : right
 $sheet->getStyle("O2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
