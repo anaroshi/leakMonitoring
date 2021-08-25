@@ -54,13 +54,15 @@ while ($row = mysqli_fetch_array($result)) {
   $install  = $row['install'];                          // 설치일자
 
   $dbname1  = "sensor_report_" . $sid . "_" . $sn;
-  $sql1     = "SELECT date FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
+  $sql1     = "SELECT date, fver, rssi FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
   if (!($result1 = mysqli_query($conn1, $sql1))) {
     echo ("Error description: " . mysqli_error($conn1) . "query:" . $sql1);
   }
   $row1     = mysqli_fetch_assoc($result1);
   $date     = stripslashes($row1['date']);              // 최종 보고
-
+  $fver     = stripslashes($row1['fver']);
+  $rssi     = stripslashes($row1['rssi']);
+  
   $dbname2  = "leak_send_data_" . $sid . "_" . $sn;
   $sql2     = "SELECT max(complete_time) as complete_time from `$dbname2` where complete ='1'";
   if (!($result2 = mysqli_query($conn1, $sql2))) {
@@ -100,6 +102,9 @@ while ($row = mysqli_fetch_array($result)) {
   $row4         = mysqli_fetch_array($result4);
   $material     = $row4['material'] ?? '';
 
+  // sensor_report_$sid_$sn
+  // SELECT cid, fver FROM `sensor_report_producttest_SWFLB-20210408-0106-0459` order by cid desc limit 1
+
   ++$no;
   $outputList .= "  
     <tr class ='tr_report'>
@@ -120,6 +125,8 @@ while ($row = mysqli_fetch_array($result)) {
       <td class ='b_report leakStatusTxt'>$leakStatus</td>
       <td class ='b_report snStatusTxt'>$sensorStatus</td>
       <td class ='b_report pipeInfoTxt'>$material</td>
+      <td class ='b_report b_fver'>$fver</td>
+      <td class ='b_report b_rssi'>$rssi</td>
     </tr>
   ";
 
@@ -193,6 +200,8 @@ $conn5->close();
           <th class='hLeakStatusTxt' rowspan='2'>누수여부</th>
           <th class='hSnStatusTxt' rowspan='2'>센서상태</th>
           <th class='hPipeInfoTxt' rowspan='2'>관정보</th>
+          <th class='hFver' rowspan='2'>FW버젼</th>
+          <th class='hRssi' rowspan='2'>RSSI</th>
         </tr>
         <tr>
           <th class='hBattery1'><?php echo $getDate[4] ?></th>
@@ -245,7 +254,7 @@ $conn5->close();
    */
   function getSensorStatusList($sensorStatus,$conn5) {
     $outputSensorStatus_list = '';
-    $sql = "select sensorStatus from sensorStatus_list";
+    $sql = "select sensorStatus from sensorStatus_list order by sensorStatus";
 
     $result     = mysqli_query($conn5, $sql);
     $outputSensorStatus_list .= '<option value = "">&nbsp;</option>';

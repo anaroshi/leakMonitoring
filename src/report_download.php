@@ -55,7 +55,7 @@ $spreadsheet->getDefaultStyle()->getFont()->setName('맑은고딕');
 $spreadsheet->getDefaultStyle()->getFont()->setSize(10);
 
 // Cell Merge
-$sheet->mergeCells('A1:O1');
+$sheet->mergeCells('A1:Q1');
 $sheet->mergeCells('A2:C2');
 $sheet->mergeCells('A3:A4');
 $sheet->mergeCells('B3:B4');
@@ -67,7 +67,8 @@ $sheet->mergeCells('G3:K3');
 $sheet->mergeCells('L3:M3');
 $sheet->mergeCells('N3:N4');
 $sheet->mergeCells('O3:O4');
-
+$sheet->mergeCells('P3:P4');
+$sheet->mergeCells('Q3:Q4');
 
 /**************************
  * LEAKMASTER 
@@ -139,13 +140,14 @@ while ($row = mysqli_fetch_array($result)) {
   $install  = $row['install'];                          // 설치일자
 
   $dbname1  = "sensor_report_" . $sid . "_" . $sn;
-  $str1     = "SELECT date FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
+  $str1     = "SELECT date, fver, rssi FROM `$dbname1` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname1`)";
   if (!($result1 = mysqli_query($conn1, $str1))) {
     echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
   }
   $row1     = mysqli_fetch_assoc($result1);
   $date     = stripslashes($row1['date']);              // 최종 보고
-
+  $fver     = stripslashes($row1['fver']);
+  $rssi     = stripslashes($row1['rssi']);
 
   $dbname2  = "leak_send_data_" . $sid . "_" . $sn;
   $str2     = "SELECT max(complete_time) as complete_time from `$dbname2` where complete ='1'";
@@ -197,7 +199,9 @@ while ($row = mysqli_fetch_array($result)) {
     ->setCellValue("L$i", $leakStatus)
     ->setCellValue("M$i", $sensorStatus)
     ->setCellValue("N$i", $material)
-    ->setCellValue("O$i", $comm);
+    ->setCellValue("O$i", $fver)
+    ->setCellValue("P$i", $rssi)
+    ->setCellValue("Q$i", $comm);
     
     // 누수여부
     switch ($leakStatus) {
@@ -230,6 +234,9 @@ while ($row = mysqli_fetch_array($result)) {
         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
         ->getStartColor()->setARGB('FFB8CCE4'); //184 204 228 
         break;
+      case "통신불량":
+      case "통신불량(방전)":
+      case "통신불량(침수)":
       case "통신중단":
       case "통신중단(방전)":
       case "통신중단(침수)":  
@@ -246,7 +253,7 @@ while ($row = mysqli_fetch_array($result)) {
 $spreadsheet->setActiveSheetIndex(0)
   ->setCellValue('A1', strtoupper($sid) . ' ' . strtoupper($pname) . ' 누수 센서 현황')
   ->setCellValue('A2', '센서 : ' . $no . '개')
-  ->setCellValue('O2', $getTime)
+  ->setCellValue('Q2', $getTime)
   ->setCellValue('A3', 'No')
   ->setCellValue('B3', '밸브')
   ->setCellValue('C3', '센서설치일자')
@@ -256,16 +263,16 @@ $spreadsheet->setActiveSheetIndex(0)
   ->setCellValue('G3', '배터리')
   ->setCellValue('L3', '상태')
   ->setCellValue('N3', '관정보')
-  ->setCellValue('O3', '특이사항')
+  ->setCellValue('O3', 'FM버젼')
+  ->setCellValue('P3', 'RSSI')
+  ->setCellValue('Q3', '특이사항')
   ->setCellValue('G4', $date1)
   ->setCellValue('H4', $date2)
   ->setCellValue('I4', $date3)
   ->setCellValue('J4', $date4)
   ->setCellValue('K4', $date5)
   ->setCellValue('L4', '누수여부')
-  ->setCellValue('M4', '센서상태')
-  ->setCellValue('N4', '관정보')
-  ->setCellValue('O4', '특이사항');
+  ->setCellValue('M4', '센서상태');
 
 
 $sheet->getColumnDimension('A')->setAutoSize(true);
@@ -283,18 +290,20 @@ $sheet->getColumnDimension('L')->setAutosize(true);
 $sheet->getColumnDimension('M')->setAutosize(true);
 $sheet->getColumnDimension('N')->setAutosize(true);
 $sheet->getColumnDimension('O')->setAutosize(true);
+$sheet->getColumnDimension('P')->setAutosize(true);
+$sheet->getColumnDimension('Q')->setAutosize(true);
 
 // Bold Text
-$spreadsheet->getActiveSheet()->getStyle("A1:O4")->getFont()->setBold(true);
+$spreadsheet->getActiveSheet()->getStyle("A1:Q4")->getFont()->setBold(true);
 
 // Font Size
-$spreadsheet->getActiveSheet()->getStyle("A1:O1")->getFont()->setSize(17);
-$spreadsheet->getActiveSheet()->getStyle("A2:O2")->getFont()->setSize(12);
+$spreadsheet->getActiveSheet()->getStyle("A1:Q1")->getFont()->setSize(17);
+$spreadsheet->getActiveSheet()->getStyle("A2:Q2")->getFont()->setSize(12);
 
 --$i;
 
 // Background-color
-$spreadsheet->getActiveSheet()->getStyle('A3:O4')->getFill()
+$spreadsheet->getActiveSheet()->getStyle('A3:Q4')->getFill()
     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
     ->getStartColor()->setARGB('00FFFF');
 // $spreadsheet->getActiveSheet()->getStyle("A5:A$i")->getFill()
@@ -303,13 +312,14 @@ $spreadsheet->getActiveSheet()->getStyle('A3:O4')->getFill()
 
 
 // Text align : center
-$sheet->getStyle("A1:O1")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
-$sheet->getStyle("A3:N$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A1:Q1")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A3:Q4")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+$sheet->getStyle("A5:O$i")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
 // Text align : right
-$sheet->getStyle("O2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
+$sheet->getStyle("Q2")->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_RIGHT);
 
 // Design Table
-$sheet->getStyle("A3:O$i")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+$sheet->getStyle("A3:Q$i")->getBorders()->getAllBorders()->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
 
 $fileName = $sid . "_" . $pname . "_sensorReport.xlsx";
 //$fileName = "sensorReport.xlsx";

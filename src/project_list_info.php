@@ -27,7 +27,6 @@ if (isset($pname)) {
 
     $output = '';
     /************************************/
-    //$str = "select sn from sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' GROUP BY sn ORDER BY sn";
     $str = "select sn, v_no from sensor_list where sid = '$sid' and pname = '$pname' and col_valid != '-1' and chk_install = 1 GROUP BY sn ORDER BY sn";
     if (!($result = mysqli_query($conn1, $str))) {
         echo ("Error description: " . mysqli_error($conn1) . "query:" . $str);
@@ -47,11 +46,16 @@ if (isset($pname)) {
 
             $sn = stripslashes($row['sn']);
             $v_no = stripslashes($row['v_no']);
-/**
- * 프로젝트 추가작업해주어야함.
- * 
- **/            
-            if ($pname !='daeguall' and $pname !='duryu' and $pname !='gachang' and $pname !='gachang_plus' and $pname !='padong' and $sid !='producttest' and $sid !='goesan' and $sid !='gochang' and $sid !='gapyeong') {
+
+            /**
+             * 프로젝트 추가작업해주어야함.
+             * 
+             **/
+ 
+            $opt  = `$pname !='0102_gamyeongpark' and $pname !='0108_dsmc' and $pname !='0109_dsmc' and $pname !='0114_hyanggyo' and `;
+            $opt .= `$pname !='0301_bisandye' and $pname !='0307_daepyong_ms' and $pname !='0308_bloodinfo' and $pname !='0320_ksschool_ms' and `;
+            $opt .= `$sid !='producttest' and $sid !='goesan' and $sid !='gochang' and $sid !='gapyeong'`;
+            if ($opt) {
                 // 반월당과 동성로 그 외 프로젝트
                 goto exception;
             }       
@@ -65,9 +69,7 @@ if (isset($pname)) {
                 goto exception;
             }
         
-            // SELECT * FROM `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where (sn, date) IN (SELECT sn, max(date) as date from `sensor_report_mdaejeon_STFMB-20200312-0102-0001` where sid = 'mdaejeon' and project = 'v_daejeon_1' and sn = 'STFMB-20200312-0102-0001')
-            //$str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname` where sid = '$sid' and project = '$pname' and sn = '$sn')";
-            $str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname`)";
+            $str1 = "SELECT * FROM `$dbname` where (sn, date) IN (SELECT sn, max(date) as date from `$dbname`) and sid= '$sid' and project ='$pname' ";
             //echo $str1;
             if (!($result1 = mysqli_query($conn1, $str1))) {
                 echo ("Error description: " . mysqli_error($conn1) . "query:" . $str1);
@@ -95,8 +97,7 @@ if (isset($pname)) {
 
             if (strlen($batt) < 1) $batt = '-';
             $dbname2 = "leak_send_data_" . $sid . "_" . $sn;
-            //$str2 = "select fname, complete, complete_time, fnum from `$dbname2` where sid = '$sid' and sn='$sn' and pname = '$pname' order by cid desc limit 1";
-            $str2 = "select fname, complete, complete_time, fnum from `$dbname2` order by cid desc limit 1";
+            $str2 = "select fname, complete, complete_time, fnum from `$dbname2` where sid= '$sid' and pname = '$pname' order by cid desc limit 1";
             //echo '  str2 : '.$str2;
             $result2 = mysqli_query($conn1, $str2) or die(mysqli_error($conn1));
             $no2 = mysqli_num_rows($result2);
@@ -113,8 +114,7 @@ if (isset($pname)) {
 
             /************************************/
             $dbname3 = "leak_send_data_" . $sid . "_" . $sn;
-            //$str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where pname = '$pname' and sid = '$sid' and sn ='$sn' and complete ='1'";
-            $str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where complete ='1'";
+            $str3 = "SELECT max(complete_time) as complete_time from `$dbname3` where complete ='1' and pname = '$pname' and sid = '$sid' ";
             // echo '  str3 : '.$str3;
             $result3 = mysqli_query($conn1, $str3) or die(mysqli_error($conn1));
             $no3 = mysqli_num_rows($result3);

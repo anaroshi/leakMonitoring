@@ -9,6 +9,8 @@ $(document).ready(function () {
   let sensorStatus  = "";
   let pipeInfo      = "";
   let pipeInfoTxt   = "";
+  let fver          = "";
+  let rssi          = "";
   let comm          = "";
   let _tr           = "";
   let _td           = "";
@@ -105,13 +107,15 @@ $(document).ready(function () {
       leakStatus    = _tr.find('.leakStatusTxt').text();
       sensorStatus  = _tr.find('.snStatusTxt').text();
       pipeInfo      = _tr.find('.pipeInfoTxt').text();
+      fver          = _tr.find('.b_fver').text();
+      rssi          = _tr.find('.b_rssi').text();
       comm          = _tr.find('.comm').val(); 
       console.log(`${sn}_${leakStatus}_${sensorStatus}_${pipeInfo}_${comm}`);
 
       $.ajax({
         type: "POST",
         url: "./project_report_save.php",
-        data: {sid, pname, sn, leakStatus, sensorStatus, pipeInfo, comm },
+        data: {sid, pname, sn, leakStatus, sensorStatus, pipeInfo, fver, rssi, comm },
         dataType: "html",
       })
       .done(async function (data) { 

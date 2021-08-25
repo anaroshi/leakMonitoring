@@ -16,13 +16,17 @@ $(document).ready(function () {
     showLoadingBar();
 
     // **************  프로젝트 추가작업은 여기서   
-    processSub(sid, 'duryu', intervalMinute, '15');
-    processSub(sid, 'gachang', intervalMinute, '16');
-    processSub(sid, 'gachang_plus', intervalMinute, '17');
-    processSub(sid, 'padong', intervalMinute, '18');
-    processSub('gapyeong', 'gapyeong', intervalMinute, '25');
-    processSub('gochang', 'gochang_namgu', intervalMinute, '27');
-    processSub('goesan', 'goesan', intervalMinute, '28');
+    processSub(sid, '0102_gamyeongpark', intervalMinute, '9');
+    processSub(sid, '0108_dsmc', intervalMinute, '10');
+    processSub(sid, '0109_dsmc', intervalMinute, '11');
+    processSub(sid, '0114_hyanggyo', intervalMinute, '12');
+    processSub(sid, '0301_bisandye', intervalMinute, '13');
+    processSub(sid, '0307_daepyong_ms', intervalMinute, '14');
+    processSub(sid, '0308_bloodinfo', intervalMinute, '15');
+    processSub(sid, '0320_ksschool_ms', intervalMinute, '16');
+    processSub('gapyeong', 'gapyeong', intervalMinute, '35');
+    processSub('gochang', 'gochang_namgu', intervalMinute, '39');
+    processSub('goesan', 'goesan', intervalMinute, '40');
     hideLoadingBar();
 
   });
@@ -108,9 +112,9 @@ $(document).ready(function () {
    $(document).on('click', 'div.sSn', function () {
     let sn      = $(this).text();    
     let _td     = $(this).closest('tbody').find('tr').children();
-    let sid     = _td.eq(2).text();
-    let pname   = _td.eq(3).text();    
-    //alert (sid+":"+pname+":"+sn);
+    let sid     = _td.eq(1).text();
+    let pname   = _td.eq(2).text();    
+    alert (sid+":"+pname+":"+sn);
 
     location.href = "../sensorRpInterval/src/sensorRpInterval.php?sid=" + sid + "&pname=" + pname+ "&sn=" + sn;
 

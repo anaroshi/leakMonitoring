@@ -29,7 +29,7 @@
     include($_SERVER['DOCUMENT_ROOT'] . "/connect_db.php");
     include($_SERVER['DOCUMENT_ROOT'] . "/dbConfig_leak.php");
 
-    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project WHERE left(sid,5) != 'test_' ORDER BY sid, pname";
+    $str2 = "SELECT sid as SID, pname as 프로젝트 FROM leak_project WHERE left(sid,5) != 'test_' and substr(sid,6,7) != 'product' and substr(sid,6,7) != 'inspect' ORDER BY sid, pname";
     if (!($result2 = mysqli_query($conn1, $str2))) {
         echo ("Error description: " . mysqli_error($conn1) . "query:" . $str2);
     }

@@ -11,19 +11,23 @@ $leakStatus     = $_POST["leakStatus"] ?? "";       // 4. 누수여부
 $sensorStatus   = $_POST["sensorStatus"] ?? "";     // 5. 센서상태
 $pipeInfo       = $_POST["pipeInfo"] ?? "";         // 6. 관정보
 $comm           = $_POST["comm"] ?? "";             // 7. 특이사항
+$fver           = $_POST["fver"] ?? "";             // 8. FIRMWARE Version
+$rssi           = $_POST["rssi"] ?? "";             // 9. RSSI
 
-// echo ("sid:".$sid.", pname:".$pname."sn:".$sn.", leakStatus:".$leakStatus."sid:".$sid.", sensorStatus:".$sensorStatus."pipeInfo:".$pipeInfo.", comm:".$comm );
+// echo ("sid:".$sid.", pname:".$pname."sn:".$sn.", leakStatus:".$leakStatus."sid:".$sid.", sensorStatus:".$sensorStatus);
+// echo ("pipeInfo:".$pipeInfo.", comm:".$comm.", fver:".$fver.", rssi:".$rssi );
 
 include($_SERVER['DOCUMENT_ROOT']."/connect_db.php");
 include($_SERVER['DOCUMENT_ROOT']."/dbConfig_personal_leak.php");
 
 if ($sid !="" && $pname != "" && $sn != "") {
   $sql   = "INSERT INTO leak_report( ";
-  $sql  .= "sid, pname, sn, leakStatus, sensorStatus, pipeInfo, comm, inDate) ";
-  $sql  .= "VALUES ('$sid','$pname','$sn','$leakStatus','$sensorStatus','$pipeInfo','$comm',now()) ";
+  $sql  .= "sid, pname, sn, leakStatus, sensorStatus, pipeInfo, fver, rssi, comm, inDate) ";
+  $sql  .= "VALUES ('$sid','$pname','$sn','$leakStatus','$sensorStatus','$pipeInfo','$fver','$rssi','$comm',now()) ";
   $sql  .= "ON DUPLICATE KEY UPDATE ";
   $sql  .= "sid = '$sid', pname = '$pname', sn = '$sn', leakStatus = '$leakStatus', ";
-  $sql  .= "sensorStatus = '$sensorStatus', pipeInfo = '$pipeInfo', comm = '$comm', inDate = now()";
+  $sql  .= "sensorStatus = '$sensorStatus', pipeInfo = '$pipeInfo', fver = '$fver', rssi = '$rssi', ";
+  $sql  .= "comm = '$comm', inDate = now()";
   // echo $sql;
 
   if (!($result = mysqli_query($conn5, $sql))) {
