@@ -13,7 +13,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 // error_reporting(E_ALL);
 // ini_set("display_errors",1);
 
-
 $sid    = trim($_GET["sid"]) ?? null;
 $pname  = trim($_GET["pname"]) ?? null;
 
@@ -25,7 +24,6 @@ for ($i = 4; $i > -2; $i--) {
   $getDate[$i] = date("y/m/d", strtotime("-" . $i . " days"));
   $setDate[$i] = date("Y-m-d", strtotime("-" . $i . " days"));
 }
-
 
 $date1  = $_GET["date1"] ?? null;
 $date2  = $_GET["date2"] ?? null;
