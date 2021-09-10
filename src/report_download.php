@@ -353,6 +353,5 @@ function getBatt($sid,$sn,$setDate1,$setDate2,$conn1) {
     $batt  = $row['batt'] ?? '';
   }
   return $batt;
-}  
-
+}
 ?>
