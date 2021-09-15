@@ -223,6 +223,7 @@ while ($row = mysqli_fetch_array($result)) {
     // 센서상태
     switch ($sensorStatus) {
       case "데이터불량":
+      case "방전직전":
         $spreadsheet->getActiveSheet()->getStyle("M$i")->getFill()
         ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
         ->getStartColor()->setARGB('FFFFEB9C'); //255 235 156
